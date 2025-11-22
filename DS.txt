@@ -513,10 +513,6 @@
                         <label>宣告利率 (%) <small style="color:var(--warning)">預期</small></label>
                         <input type="number" id="newDeclaredRate" value="3.8" step="0.1">
                     </div>
-                    <div class="form-group">
-                        <label>附加費用率 (%) <small style="color:#e53e3e">每期扣除</small></label>
-                        <input type="number" id="newExpenseRatio" value="0" step="0.1" placeholder="例如 1.5">
-                    </div>
                 </div>
             </div>
 
@@ -540,8 +536,35 @@
                         <input type="number" id="invDistRateA" value="5" step="0.1">
                     </div>
                     <div class="form-group">
+                        <label>或 每月平均配息金額 (原幣) <small style="color:var(--secondary)">優先使用</small></label>
+                        <input type="number" id="invMonthlyPayoutA" placeholder="填此則忽略配息率">
+                    </div>
+                    <div class="form-group">
                         <label>預期淨值年漲跌 (%)</label>
                         <input type="number" id="invNavGrowthA" value="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>前置費用 (%) <small style="color:#666">手續費</small></label>
+                        <input type="number" id="invUpfrontFeeA" value="1.5" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>內扣費用 (%) <small style="color:#666">經理費/管理費</small></label>
+                        <input type="number" id="invMgmtFeeA" value="1.0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" id="invUseNavStepA"> 進階：使用 NAV 階梯配息 (去年)</label>
+                    </div>
+                    <div class="form-group">
+                        <label>NAV→月配定義 (原幣) <small style="color:#666">格式：10=1000,10.1=2000,10.2=3000</small></label>
+                        <input type="text" id="invNavThresholdsA" placeholder="10=1000,10.1=2000,10.2=3000">
+                    </div>
+                    <div class="form-group">
+                        <label>月配上限 (原幣)</label>
+                        <input type="number" id="invPayoutCapA" value="3000" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>去年每月 NAV (逗號分隔，12筆)</label>
+                        <textarea id="invMonthlyNavsA" rows="2" placeholder="例如：9.98,10.05,10.12,10.08,10.15,10.20,10.18,10.22,10.30,10.25,10.28,10.35"></textarea>
                     </div>
                 </div>
 
@@ -563,8 +586,35 @@
                         <input type="number" id="invDistRateB" value="8" step="0.1">
                     </div>
                     <div class="form-group">
+                        <label>或 每月平均配息金額 (原幣) <small style="color:var(--secondary)">優先使用</small></label>
+                        <input type="number" id="invMonthlyPayoutB" placeholder="填此則忽略配息率">
+                    </div>
+                    <div class="form-group">
                         <label>預期淨值年漲跌 (%)</label>
                         <input type="number" id="invNavGrowthB" value="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>前置費用 (%) <small style="color:#666">保費費用</small></label>
+                        <input type="number" id="invUpfrontFeeB" value="3.0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>內扣費用 (%) <small style="color:#666">經理費/管理費</small></label>
+                        <input type="number" id="invMgmtFeeB" value="1.5" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" id="invUseNavStepB"> 進階：使用 NAV 階梯配息 (去年)</label>
+                    </div>
+                    <div class="form-group">
+                        <label>NAV→月配定義 (原幣) <small style="color:#666">格式：10=1000,10.1=2000,10.2=3000</small></label>
+                        <input type="text" id="invNavThresholdsB" placeholder="10=1000,10.1=2000,10.2=3000">
+                    </div>
+                    <div class="form-group">
+                        <label>月配上限 (原幣)</label>
+                        <input type="number" id="invPayoutCapB" value="3000" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>去年每月 NAV (逗號分隔，12筆)</label>
+                        <textarea id="invMonthlyNavsB" rows="2" placeholder="例如：9.98,10.05,10.12,10.08,10.15,10.20,10.18,10.22,10.30,10.25,10.28,10.35"></textarea>
                     </div>
                 </div>
             </div>
@@ -748,18 +798,31 @@
                 paymentYears: parseInt(getStr('paymentYears')),
                 newGuaranteedRate: getVal('newGuaranteedRate') / 100,
                 newDeclaredRate: getVal('newDeclaredRate') / 100,
-                newExpenseRatio: document.getElementById('newExpenseRatio') ? getVal('newExpenseRatio') / 100 : 0,
                 
                 // Investment
                 invPrincipalA: getVal('invPrincipalA'),
                 invCurrencyA: getStr('invCurrencyA'),
                 invDistRateA: getVal('invDistRateA') / 100,
+                invMonthlyPayoutA: getVal('invMonthlyPayoutA'), // New
                 invNavGrowthA: getVal('invNavGrowthA') / 100,
+                invUpfrontFeeA: document.getElementById('invUpfrontFeeA') ? getVal('invUpfrontFeeA') / 100 : 0,
+                invMgmtFeeA: document.getElementById('invMgmtFeeA') ? getVal('invMgmtFeeA') / 100 : 0,
+                invUseNavStepA: document.getElementById('invUseNavStepA') ? document.getElementById('invUseNavStepA').checked : false,
+                invNavThresholdsA: document.getElementById('invNavThresholdsA') ? document.getElementById('invNavThresholdsA').value : '',
+                invPayoutCapA: document.getElementById('invPayoutCapA') ? parseFloat(document.getElementById('invPayoutCapA').value || '0') : 0,
+                invMonthlyNavsA: document.getElementById('invMonthlyNavsA') ? document.getElementById('invMonthlyNavsA').value : '',
 
                 invPrincipalB: getVal('invPrincipalB'),
                 invCurrencyB: getStr('invCurrencyB'),
                 invDistRateB: getVal('invDistRateB') / 100,
+                invMonthlyPayoutB: getVal('invMonthlyPayoutB'), // New
                 invNavGrowthB: getVal('invNavGrowthB') / 100,
+                invUpfrontFeeB: document.getElementById('invUpfrontFeeB') ? getVal('invUpfrontFeeB') / 100 : 0,
+                invMgmtFeeB: document.getElementById('invMgmtFeeB') ? getVal('invMgmtFeeB') / 100 : 0,
+                invUseNavStepB: document.getElementById('invUseNavStepB') ? document.getElementById('invUseNavStepB').checked : false,
+                invNavThresholdsB: document.getElementById('invNavThresholdsB') ? document.getElementById('invNavThresholdsB').value : '',
+                invPayoutCapB: document.getElementById('invPayoutCapB') ? parseFloat(document.getElementById('invPayoutCapB').value || '0') : 0,
+                invMonthlyNavsB: document.getElementById('invMonthlyNavsB') ? document.getElementById('invMonthlyNavsB').value : '',
                 
                 // Common
                 exchangeRate: getVal('exchangeRate')
@@ -814,10 +877,8 @@
                 data.principalLine.push(totalPaidSoFar);
 
                 if (i <= inputs.paymentYears) {
-                    // 扣除附加費用率 (Expense Ratio)
-                    let netPremium = premiumPaidThisYear * (1 - inputs.newExpenseRatio);
-                    accountValueGuaranteed += netPremium;
-                    accountValueDeclared += netPremium;
+                    accountValueGuaranteed += premiumPaidThisYear;
+                    accountValueDeclared += premiumPaidThisYear;
                 }
                 
                 accountValueGuaranteed *= (1 + inputs.newGuaranteedRate);
@@ -845,7 +906,7 @@
         function calculateInvestmentProjections(inputs) {
             const years = 20;
             
-            const calc = (principal, currency, distRate, growthRate) => {
+            const calc = (principal, currency, distRate, growthRate, upfrontFee, mgmtFee, monthlyOverride, useNavStep, thresholdsStr, payoutCap, monthlyNavsStr) => {
                 const res = {
                     labels: [],
                     principal: [],
@@ -860,15 +921,102 @@
                     principalTWD = principal * inputs.exchangeRate;
                 }
                 
-                let currentVal = principalTWD;
+                // 扣除前置費用 (Upfront Fee)
+                let investedAmount = principalTWD * (1 - upfrontFee);
+                let currentVal = investedAmount;
+                
                 let totalCash = 0;
-                const yearlyDist = principalTWD * distRate;
-                res.monthlyCash = yearlyDist / 12;
+
+                // 工具方法：解析 NAV→配息 定義，如 "10=1000,10.1=2000,10.2=3000"
+                const parseThresholds = (s) => {
+                    if (!s) return [];
+                    try {
+                        return s.split(',')
+                            .map(p => p.trim())
+                            .filter(p => p.includes('='))
+                            .map(p => {
+                                const [t, v] = p.split('=');
+                                return { th: parseFloat(t), val: parseFloat(v) };
+                            })
+                            .filter(o => !isNaN(o.th) && !isNaN(o.val))
+                            .sort((a,b) => a.th - b.th);
+                    } catch { return []; }
+                };
+
+                const parseMonthlyNavs = (s) => {
+                    if (!s) return [];
+                    try {
+                        return s.split(/[，,\s]+/)
+                            .map(x => parseFloat(x))
+                            .filter(x => !isNaN(x));
+                    } catch { return []; }
+                };
+
+                const thresholds = parseThresholds(thresholdsStr);
+                const navs = parseMonthlyNavs(monthlyNavsStr);
+
+                // 年度配息(台幣)計算策略：
+                // 1) 若有「每月平均配息(原幣)」覆蓋，優先使用
+                // 2) 其次，若勾選NAV階梯且提供了NAV清單與門檻，依規則計算月配平均
+                // 3) 否則使用年化配息率 * 投入本金
+                let yearlyDist = 0; // 台幣
+
+                const toTWD = (amtOrig) => currency === 'USD' ? amtOrig * inputs.exchangeRate : amtOrig;
+
+                if (monthlyOverride && monthlyOverride > 0) {
+                    const avgMonthlyTWD = toTWD(monthlyOverride);
+                    yearlyDist = avgMonthlyTWD * 12;
+                    res.monthlyCash = avgMonthlyTWD;
+                } else if (useNavStep && thresholds.length > 0 && navs.length > 0) {
+                    let monthlySumOrig = 0;
+                    navs.forEach(nav => {
+                        // 找到不大於 NAV 的最高門檻
+                        let payout = 0;
+                        for (let i=0; i<thresholds.length; i++) {
+                            if (nav >= thresholds[i].th) payout = thresholds[i].val;
+                            else break;
+                        }
+                        if (payoutCap && payoutCap > 0) payout = Math.min(payout, payoutCap);
+                        monthlySumOrig += payout;
+                    });
+                    const months = navs.length;
+                    const avgMonthlyOrig = months > 0 ? (monthlySumOrig / months) : 0;
+                    const avgMonthlyTWD = toTWD(avgMonthlyOrig);
+                    yearlyDist = avgMonthlyTWD * 12;
+                    res.monthlyCash = avgMonthlyTWD;
+                } else {
+                    yearlyDist = principalTWD * distRate; // 固定撥回
+                    res.monthlyCash = yearlyDist / 12;
+                }
 
                 for (let i = 1; i <= years; i++) {
                     res.labels.push(`第${i}年`);
                     res.principal.push(principalTWD);
-                    currentVal = currentVal * (1 + growthRate);
+                    
+                    // 淨值成長 (扣除內扣費用)
+                    // 邏輯：(1 + 漲跌幅 - 費用率)
+                    // 假設漲跌幅是含息的? 不，通常輸入的是「價格漲跌」。
+                    // 投資型保單邏輯：帳戶價值 = 前一年價值 * (1 + 投資報酬率) - 管理費 - 危險保費(這裡忽略) - 配息
+                    // 這裡的 growthRate 是單純價格變動。
+                    // 修正邏輯：
+                    // 1. 增值: currentVal * (1 + growthRate)
+                    // 2. 扣費: currentVal * (1 - mgmtFee)  <-- 簡化：直接從報酬率扣
+                    // 3. 配息: 扣除配息金額 (若是配息來自本金)
+                    // 等等，如果配息率是外加的 (領現金)，那帳戶價值會減少嗎？
+                    // 基金/ETF：配息後淨值會掉。
+                    // 所以：期末價值 = 期初價值 * (1 + 漲跌幅 - 內扣費用) - 配息金額
+                    
+                    // 但用戶輸入的 "預期淨值年漲跌" 通常已經是客戶心中的 "價格走勢"。
+                    // 如果用戶輸入 "0%" (不漲不跌)，他預期本金不動，配息照領。
+                    // 如果我們再扣配息，本金會歸零。
+                    // 所以這裡的 "預期淨值年漲跌" 應該被視為 "配息後的價格變動"。
+                    // 也就是說：Price_End = Price_Start * (1 + Growth_Net)。
+                    // 那內扣費用去哪了？應該是讓 Growth_Net 變低。
+                    // 所以：實際漲跌 = 輸入漲跌 - 內扣費用。
+                    
+                    let netGrowth = growthRate - mgmtFee;
+                    currentVal = currentVal * (1 + netGrowth);
+                    
                     res.accountValue.push(currentVal);
                     totalCash += yearlyDist;
                     res.cumulativeCash.push(totalCash);
@@ -877,8 +1025,32 @@
                 return res;
             };
 
-            const dataA = calc(inputs.invPrincipalA, inputs.invCurrencyA, inputs.invDistRateA, inputs.invNavGrowthA);
-            const dataB = calc(inputs.invPrincipalB, inputs.invCurrencyB, inputs.invDistRateB, inputs.invNavGrowthB);
+            const dataA = calc(
+                inputs.invPrincipalA,
+                inputs.invCurrencyA,
+                inputs.invDistRateA,
+                inputs.invNavGrowthA,
+                inputs.invUpfrontFeeA,
+                inputs.invMgmtFeeA,
+                inputs.invMonthlyPayoutA,
+                inputs.invUseNavStepA,
+                inputs.invNavThresholdsA,
+                inputs.invPayoutCapA,
+                inputs.invMonthlyNavsA
+            );
+            const dataB = calc(
+                inputs.invPrincipalB,
+                inputs.invCurrencyB,
+                inputs.invDistRateB,
+                inputs.invNavGrowthB,
+                inputs.invUpfrontFeeB,
+                inputs.invMgmtFeeB,
+                inputs.invMonthlyPayoutB,
+                inputs.invUseNavStepB,
+                inputs.invNavThresholdsB,
+                inputs.invPayoutCapB,
+                inputs.invMonthlyNavsB
+            );
 
             return { dataA, dataB };
         }
@@ -1199,8 +1371,8 @@
                     <th>效益差額</th>
                     <th>A 月領</th>
                     <th>B 月領</th>
+                    <th>A 總報酬%</th>
                     <th>B 總報酬%</th>
-                    <th>B 年化%</th>
                 `;
             }
 
@@ -1210,10 +1382,11 @@
                 const tbB = dataB.totalBenefit[idx];
                 const diff = tbB - tbA;
                 
-                // ROI for Plan B
+                // ROI for Plan A & B
+                const principalA = dataA.principal[idx];
                 const principalB = dataB.principal[idx];
+                const roiA = ((tbA - principalA) / principalA) * 100;
                 const roiB = ((tbB - principalB) / principalB) * 100;
-                const cagrB = (Math.pow(tbB / principalB, 1/year) - 1) * 100;
 
                 const row = document.createElement('tr');
                 if (diff > 0) row.classList.add('highlight-row');
@@ -1225,8 +1398,8 @@
                     <td style="color:${diff>=0?'var(--accent)':'var(--danger)'}">${diff>=0?'+':''}${(diff/10000).toFixed(1)} 萬</td>
                     <td style="color:#718096">${Math.round(dataA.monthlyCash).toLocaleString()}</td>
                     <td style="color:var(--warning);font-weight:bold">${Math.round(dataB.monthlyCash).toLocaleString()}</td>
+                    <td style="color:${roiA>=0?'var(--accent)':'var(--danger)'}">${roiA.toFixed(1)}%</td>
                     <td style="color:${roiB>=0?'var(--accent)':'var(--danger)'}">${roiB.toFixed(1)}%</td>
-                    <td style="color:${cagrB>=0?'var(--accent)':'var(--danger)'}">${cagrB.toFixed(1)}%</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -1335,12 +1508,11 @@
             // 2. 轉換效益 (保證)
             const gClass = diffG >= 0 ? 'text-green' : 'text-red';
             const gWord = diffG >= 0 ? '增加' : '減少';
-            const expenseNote = inputs.newExpenseRatio > 0 ? `(已扣除 ${inputs.newExpenseRatio*100}% 附加費用)` : '';
             
             html += `
                 <div class="report-block">
                     <div class="report-title"><span class="report-icon">🛡️</span> 新方案：保守評估 (保證利率)</div>
-                    <p>若轉換至新方案，在最保守的 <span class="highlight-text">${(inputs.newGuaranteedRate*100).toFixed(1)}%</span> 保證利率下 ${expenseNote}，
+                    <p>若轉換至新方案，在最保守的 <span class="highlight-text">${(inputs.newGuaranteedRate*100).toFixed(1)}%</span> 保證利率下，
                     20年後價值將達到 <span class="highlight-text ${gClass}">${format(newGFinal)}</span>。
                     相較於舊保單，您的資產將<span class="${gClass}">${gWord} ${format(Math.abs(diffG))}</span>。</p>
                     <p>此方案預計在第 <span class="highlight-text">${breakG}</span> 年發生黃金交叉 (價值超越舊保單)。</p>
